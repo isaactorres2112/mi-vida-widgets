@@ -1,0 +1,14 @@
+{
+  "items": [
+    {
+      "mes": "9.Septiembre",
+      "meta": 70.0,
+      "real": 55.0
+    },
+    {
+      "mes": "10.Octubre",
+      "meta": 70.0,
+      "real": 65.0
+    }
+  ]
+}
