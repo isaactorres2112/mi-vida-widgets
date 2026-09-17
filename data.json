@@ -4,21 +4,6 @@
       "mes": "9.Septiembre",
       "meta": 70.0,
       "real": 55.0
-    },
-    {
-      "mes": "10.Octubre",
-      "meta": null,
-      "real": null
-    },
-    {
-      "mes": "11.Noviembre",
-      "meta": null,
-      "real": null
-    },
-    {
-      "mes": "12.Diciembre",
-      "meta": null,
-      "real": null
     }
   ]
 }
