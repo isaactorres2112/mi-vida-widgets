@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mi Vida · Fecha de hoy</title>
+  <title>ISTO · Fecha y cuenta regresiva</title>
   <style>
     :root {
       color-scheme: light dark;
@@ -22,7 +22,7 @@
     * { box-sizing: border-box; }
     html, body { margin: 0; width: 100%; height: 100%; background: var(--bg); }
     body {
-      min-height: 180px;
+      min-height: 220px;
       display: grid;
       place-items: center;
       font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -58,20 +58,48 @@
       letter-spacing: .16em;
       color: var(--muted);
     }
+    .countdown {
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+    }
+    .countdown-number {
+      margin: 0;
+      font-size: clamp(24px, 5vw, 42px);
+      line-height: 1;
+      font-weight: 720;
+      letter-spacing: -0.035em;
+    }
+    .countdown-label {
+      margin: 7px 0 0;
+      font-size: clamp(10px, 1.8vw, 13px);
+      font-weight: 600;
+      letter-spacing: .16em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
   </style>
 </head>
 <body>
-  <main class="widget" aria-label="Fecha de hoy">
+  <main class="widget" aria-label="Fecha de hoy y cuenta regresiva">
     <p class="weekday" id="weekday"></p>
     <h1 class="date" id="date"></h1>
     <span class="year" id="year"></span>
+
+    <section class="countdown" aria-label="Días restantes al 2 de febrero de 2027">
+      <p class="countdown-number" id="daysLeft"></p>
+      <p class="countdown-label" id="countdownLabel">días para el 2 de febrero de 2027</p>
+    </section>
   </main>
+
   <script>
     const weekday = document.getElementById('weekday');
     const date = document.getElementById('date');
     const year = document.getElementById('year');
+    const daysLeft = document.getElementById('daysLeft');
+    const countdownLabel = document.getElementById('countdownLabel');
 
-    function renderDate() {
+    function renderWidget() {
       const now = new Date();
       const dayName = new Intl.DateTimeFormat('es-MX', { weekday: 'long' }).format(now);
       const day = new Intl.DateTimeFormat('es-MX', { day: 'numeric' }).format(now);
@@ -80,11 +108,21 @@
       weekday.textContent = dayName.toLocaleUpperCase('es-MX');
       date.textContent = `${day} DE ${month.toLocaleUpperCase('es-MX')}`;
       year.textContent = String(now.getFullYear());
-      document.title = `${dayName} ${day} de ${month} · Mi Vida`;
+
+      const todayUTC = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+      const targetUTC = Date.UTC(2027, 1, 2);
+      const remaining = Math.max(0, Math.ceil((targetUTC - todayUTC) / 86400000));
+
+      daysLeft.textContent = remaining;
+      countdownLabel.textContent = remaining === 1
+        ? 'día para el 2 de febrero de 2027'
+        : 'días para el 2 de febrero de 2027';
+
+      document.title = `${dayName} ${day} de ${month} · ${remaining} días restantes`;
     }
 
-    renderDate();
-    setInterval(renderDate, 60 * 1000);
+    renderWidget();
+    setInterval(renderWidget, 60 * 1000);
   </script>
 </body>
 </html>
