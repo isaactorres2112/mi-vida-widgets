@@ -7,8 +7,18 @@
     },
     {
       "mes": "10.Octubre",
-      "meta": 70.0,
-      "real": 65.0
+      "meta": null,
+      "real": null
+    },
+    {
+      "mes": "11.Noviembre",
+      "meta": null,
+      "real": null
+    },
+    {
+      "mes": "12.Diciembre",
+      "meta": null,
+      "real": null
     }
   ]
 }
