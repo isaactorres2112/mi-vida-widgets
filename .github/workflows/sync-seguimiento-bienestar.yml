@@ -1,0 +1,74 @@
+name: Sincronizar seguimiento de bienestar desde Notion
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '47 * * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Leer Notion y generar datos
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          DATA_SOURCE_ID: 3b401ec1-e57b-809f-aac5-000bd6e3f459
+        run: |
+          python - <<'PY'
+          import json, os, urllib.request
+          from collections import defaultdict
+          from datetime import datetime
+
+          circles=['Yo','Pareja','Familia','Trabajo','Amistad']
+          metrics=['Energia','Motivacion','Animo','Calma']
+          url=f"https://api.notion.com/v1/data_sources/{os.environ['DATA_SOURCE_ID']}/query"
+          results=[]; cursor=None
+          while True:
+              body={} if not cursor else {'start_cursor':cursor}
+              req=urllib.request.Request(url,data=json.dumps(body).encode(),method='POST',headers={
+                  'Authorization':f"Bearer {os.environ['NOTION_TOKEN']}",
+                  'Notion-Version':'2026-03-11','Content-Type':'application/json'})
+              with urllib.request.urlopen(req) as r: payload=json.load(r)
+              results.extend(payload.get('results',[]))
+              if not payload.get('has_more'): break
+              cursor=payload.get('next_cursor')
+
+          monthly=defaultdict(lambda:{c:[] for c in circles})
+          for page in results:
+              p=page.get('properties',{})
+              date=(p.get('Fecha',{}).get('date') or {}).get('start')
+              if not date: continue
+              try: dt=datetime.fromisoformat(date[:10])
+              except: continue
+              selected=[x.get('name') for x in p.get('Circulo',{}).get('multi_select',[])]
+              vals=[p.get(m,{}).get('number') for m in metrics]
+              vals=[v for v in vals if v is not None]
+              if not vals: continue
+              wellbeing=sum(vals)/len(vals)
+              key=dt.strftime('%Y-%m')
+              for c in selected:
+                  if c in circles: monthly[key][c].append(wellbeing)
+
+          months=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
+          items=[]
+          for key in sorted(monthly):
+              y,m=map(int,key.split('-')); row={'key':key,'mes':months[m-1],'anio':y,'circulos':{}}
+              for c,vals in monthly[key].items():
+                  row['circulos'][c]=round(sum(vals)/len(vals),2) if vals else None
+              items.append(row)
+          with open('data-seguimiento-bienestar.json','w',encoding='utf-8') as f:
+              json.dump({'circulos':circles,'items':items},f,ensure_ascii=False,indent=2)
+          PY
+      - name: Guardar cambios
+        run: |
+          git add data-seguimiento-bienestar.json
+          if git diff --cached --quiet; then echo "Sin cambios"; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Actualizar seguimiento mensual de bienestar"
+          git push
