@@ -12,10 +12,10 @@
       "mes": "Septiembre",
       "anio": 2026,
       "circulos": {
-        "Yo": 3.25,
-        "Pareja": 3.25,
-        "Familia": 3.25,
-        "Trabajo": 3.17,
+        "Yo": 65.0,
+        "Pareja": 65.0,
+        "Familia": 65.0,
+        "Trabajo": 63.3,
         "Amistad": null
       }
     }
