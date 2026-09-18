@@ -1,0 +1,33 @@
+{
+  "habitos": [
+    "Dormir",
+    "Salud",
+    "Ejercicio",
+    "Orar",
+    "Ahorrar",
+    "Leer",
+    "Agua",
+    "Uñas",
+    "Tocarse",
+    "Animo"
+  ],
+  "items": [
+    {
+      "key": "2026-09",
+      "mes": "Septiembre",
+      "anio": 2026,
+      "habitos": {
+        "Dormir": 50.0,
+        "Salud": 50.0,
+        "Ejercicio": 0.0,
+        "Orar": 0.0,
+        "Ahorrar": 75.0,
+        "Leer": 0.0,
+        "Agua": 0.0,
+        "Uñas": 100.0,
+        "Tocarse": 75.0,
+        "Animo": 100.0
+      }
+    }
+  ]
+}
