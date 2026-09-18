@@ -59,7 +59,7 @@ jobs:
           for key in sorted(monthly):
               y,m=map(int,key.split('-')); row={'key':key,'mes':months[m-1],'anio':y,'circulos':{}}
               for c,vals in monthly[key].items():
-                  row['circulos'][c]=round(sum(vals)/len(vals),2) if vals else None
+                  row['circulos'][c]=round((sum(vals)/len(vals))/5*100,1) if vals else None
               items.append(row)
           with open('data-seguimiento-bienestar.json','w',encoding='utf-8') as f:
               json.dump({'circulos':circles,'items':items},f,ensure_ascii=False,indent=2)
