@@ -1,0 +1,23 @@
+{
+  "circulos": [
+    "Yo",
+    "Pareja",
+    "Familia",
+    "Trabajo",
+    "Amistad"
+  ],
+  "items": [
+    {
+      "key": "2026-09",
+      "mes": "Septiembre",
+      "anio": 2026,
+      "circulos": {
+        "Yo": 3.25,
+        "Pareja": 3.25,
+        "Familia": 3.25,
+        "Trabajo": 3.17,
+        "Amistad": null
+      }
+    }
+  ]
+}
