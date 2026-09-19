@@ -19,11 +19,12 @@ jobs:
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           DATA_SOURCE_ID: 3b401ec1-e57b-80a1-a29e-000b303d2775
+          TZ: America/Mexico_City
         run: |
           python - <<'PY'
           import json, os, urllib.request
           from collections import defaultdict
-          from datetime import datetime
+          from datetime import datetime, date
 
           habits = ['Dormir','Salud','Ejercicio','Orar','Ahorrar','Leer','Agua','Uñas','Tocarse','Animo']
           url = f"https://api.notion.com/v1/data_sources/{os.environ['DATA_SOURCE_ID']}/query"
@@ -42,13 +43,15 @@ jobs:
               if not payload.get('has_more'): break
               cursor = payload.get('next_cursor')
 
+          today = date.today()
           monthly = defaultdict(lambda: {h:{'done':0,'days':0} for h in habits})
           for page in results:
               p = page.get('properties', {})
-              date = (p.get('Fecha', {}).get('date') or {}).get('start')
-              if not date: continue
-              try: dt = datetime.fromisoformat(date[:10])
+              raw_date = (p.get('Fecha', {}).get('date') or {}).get('start')
+              if not raw_date: continue
+              try: dt = datetime.fromisoformat(raw_date[:10]).date()
               except: continue
+              if dt >= today: continue
               key = dt.strftime('%Y-%m')
               for h in habits:
                   monthly[key][h]['days'] += 1
