@@ -18,11 +18,12 @@ jobs:
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           DATA_SOURCE_ID: 3b401ec1-e57b-809f-aac5-000bd6e3f459
+          TZ: America/Mexico_City
         run: |
           python - <<'PY'
           import json, os, urllib.request
           from collections import defaultdict
-          from datetime import datetime
+          from datetime import datetime, date
 
           circles=['Yo','Pareja','Familia','Trabajo','Amistad']
           metrics=['Energia','Motivacion','Animo','Calma']
@@ -38,26 +39,31 @@ jobs:
               if not payload.get('has_more'): break
               cursor=payload.get('next_cursor')
 
+          today=date.today()
           monthly=defaultdict(lambda:{c:[] for c in circles})
+          general=defaultdict(list)
           for page in results:
               p=page.get('properties',{})
-              date=(p.get('Fecha',{}).get('date') or {}).get('start')
-              if not date: continue
-              try: dt=datetime.fromisoformat(date[:10])
+              raw=(p.get('Fecha',{}).get('date') or {}).get('start')
+              if not raw: continue
+              try: dt=datetime.fromisoformat(raw[:10]).date()
               except: continue
-              selected=[x.get('name') for x in p.get('Circulo',{}).get('multi_select',[])]
+              if dt >= today: continue
               vals=[p.get(m,{}).get('number') for m in metrics]
               vals=[v for v in vals if v is not None]
               if not vals: continue
               wellbeing=sum(vals)/len(vals)
               key=dt.strftime('%Y-%m')
+              general[key].append(wellbeing)
+              selected=[x.get('name') for x in p.get('Circulo',{}).get('multi_select',[])]
               for c in selected:
                   if c in circles: monthly[key][c].append(wellbeing)
 
           months=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
           items=[]
-          for key in sorted(monthly):
-              y,m=map(int,key.split('-')); row={'key':key,'mes':months[m-1],'anio':y,'circulos':{}}
+          for key in sorted(general):
+              y,m=map(int,key.split('-'))
+              row={'key':key,'mes':months[m-1],'anio':y,'general':round((sum(general[key])/len(general[key]))/5*100,1),'circulos':{}}
               for c,vals in monthly[key].items():
                   row['circulos'][c]=round((sum(vals)/len(vals))/5*100,1) if vals else None
               items.append(row)
