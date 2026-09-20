@@ -25,8 +25,8 @@
         "Leer": 0.0,
         "Agua": 0.0,
         "Uñas": 100.0,
-        "Tocarse": 60.0,
-        "Animo": 80.0
+        "Tocarse": 40.0,
+        "Animo": 100.0
       }
     }
   ]
