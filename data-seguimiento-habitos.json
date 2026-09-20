@@ -17,16 +17,16 @@
       "mes": "Septiembre",
       "anio": 2026,
       "habitos": {
-        "Dormir": 75.0,
-        "Salud": 75.0,
+        "Dormir": 60.0,
+        "Salud": 60.0,
         "Ejercicio": 0.0,
         "Orar": 0.0,
-        "Ahorrar": 100.0,
+        "Ahorrar": 80.0,
         "Leer": 0.0,
         "Agua": 0.0,
         "Uñas": 100.0,
-        "Tocarse": 50.0,
-        "Animo": 100.0
+        "Tocarse": 60.0,
+        "Animo": 80.0
       }
     }
   ]
