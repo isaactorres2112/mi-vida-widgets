@@ -78,6 +78,26 @@
       color: var(--muted);
       text-transform: uppercase;
     }
+    .stoic {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+    }
+    .quote {
+      margin: 0 auto;
+      max-width: 680px;
+      font-size: clamp(13px, 2vw, 16px);
+      line-height: 1.55;
+      font-style: italic;
+    }
+    .author {
+      margin: 7px 0 0;
+      font-size: clamp(10px, 1.6vw, 12px);
+      font-weight: 650;
+      letter-spacing: .12em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
   </style>
 </head>
 <body>
@@ -90,6 +110,11 @@
       <p class="countdown-number" id="daysLeft"></p>
       <p class="countdown-label" id="countdownLabel">días para el 2 de febrero de 2027</p>
     </section>
+
+    <section class="stoic" aria-label="Frase estoica del día">
+      <p class="quote" id="quote"></p>
+      <p class="author" id="author"></p>
+    </section>
   </main>
 
   <script>
@@ -98,6 +123,18 @@
     const year = document.getElementById('year');
     const daysLeft = document.getElementById('daysLeft');
     const countdownLabel = document.getElementById('countdownLabel');
+    const quote = document.getElementById('quote');
+    const author = document.getElementById('author');
+
+    const stoicQuotes = [
+      ['La felicidad de tu vida depende de la calidad de tus pensamientos.', 'Marco Aurelio'],
+      ['Ningún hombre es libre si no es dueño de sí mismo.', 'Epicteto'],
+      ['Sufrimos más a menudo en la imaginación que en la realidad.', 'Séneca'],
+      ['No busques que los acontecimientos sucedan como quieres; quiere que sucedan como suceden.', 'Epicteto'],
+      ['La mejor venganza es no ser como quien causó el daño.', 'Marco Aurelio'],
+      ['Mientras vivas, sigue aprendiendo a vivir.', 'Séneca'],
+      ['Tienes poder sobre tu mente, no sobre los acontecimientos externos.', 'Marco Aurelio']
+    ];
 
     function renderWidget() {
       const now = new Date();
@@ -117,6 +154,12 @@
       countdownLabel.textContent = remaining === 1
         ? 'día para el 2 de febrero de 2027'
         : 'días para el 2 de febrero de 2027';
+
+      const startOfYear = new Date(now.getFullYear(), 0, 0);
+      const dayOfYear = Math.floor((now - startOfYear) / 86400000);
+      const dailyQuote = stoicQuotes[dayOfYear % stoicQuotes.length];
+      quote.textContent = `“${dailyQuote[0]}”`;
+      author.textContent = `— ${dailyQuote[1]}`;
 
       document.title = `${dayName} ${day} de ${month} · ${remaining} días restantes`;
     }
