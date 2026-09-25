@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Finanzas 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body{font-family:system-ui,-apple-system,sans-serif;margin:0;background:#f4f7fb;color:#152033}
+main{max-width:1180px;margin:auto;padding:28px}.top{display:flex;justify-content:space-between;align-items:end;gap:16px}
+h1{margin:0}.sub{color:#667085}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:24px 0}
+.card,.panel{background:#fff;border-radius:16px;padding:20px;box-shadow:0 3px 16px #172b4d12}
+.kpi{font-size:28px;font-weight:750;margin-top:8px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px;border-bottom:1px solid #e8edf4;text-align:right}
+th:first-child,td:first-child{text-align:left}.scroll{overflow:auto;max-height:520px}
+@media(max-width:800px){.cards,.grid{grid-template-columns:1fr}}
+</style></head><body><main>
+<div class="top"><div><h1>Dashboard financiero 2026</h1><div class="sub">Enero–agosto · Ingresos y gastos de operación</div></div></div>
+<div class="cards">
+<div class="card"><div class="sub">Ingresos acumulados</div><div class="kpi">$15,672,952</div></div>
+<div class="card"><div class="sub">Gastos de operación</div><div class="kpi">$5,087,280</div></div>
+<div class="card"><div class="sub">Gasto / ingreso</div><div class="kpi">32.5%</div></div>
+</div>
+<div class="grid">
+<div class="panel"><h2>Ingresos mensuales</h2><canvas id="ing"></canvas></div>
+<div class="panel"><h2>Gastos de operación mensuales</h2><canvas id="gas"></canvas></div>
+</div>
+<div class="panel" style="margin-top:18px"><h2>Comportamiento mensual</h2><div class="scroll"><table id="t"></table></div></div>
+</main>
+<script>
+const meses=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto"];
+const ingresos=[1779002.26,1920929.01,2039193.11,1938844.34,1906629.71,2072130.40,2042979.23,1973243.67];
+const gastos=[760340.70,593850.88,611093.69,572631.64,613802.35,639089.25,693066.03,603405.39];
+const money=v=>v.toLocaleString("es-MX",{style:"currency",currency:"MXN"});
+const common={responsive:true,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>"$"+(v/1000000).toFixed(1)+"M"}}}};
+new Chart(document.getElementById("ing"),{type:"line",data:{labels:meses,datasets:[{data:ingresos,tension:.25,fill:false}]},options:common});
+new Chart(document.getElementById("gas"),{type:"line",data:{labels:meses,datasets:[{data:gastos,tension:.25,fill:false}]},options:common});
+document.getElementById("t").innerHTML="<tr><th>Mes</th><th>Ingresos</th><th>Gastos operación</th><th>Gasto / ingreso</th></tr>"+
+meses.map((m,i)=>`<tr><td>${m}</td><td>${money(ingresos[i])}</td><td>${money(gastos[i])}</td><td>${(gastos[i]/ingresos[i]*100).toFixed(1)}%</td></tr>`).join("");
+</script></body></html>
