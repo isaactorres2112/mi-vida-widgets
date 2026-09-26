@@ -11,12 +11,12 @@
       "key": "2026-09",
       "mes": "Septiembre",
       "anio": 2026,
-      "general": 60.9,
+      "general": 64.5,
       "circulos": {
-        "Yo": 65.6,
-        "Pareja": 65.6,
+        "Yo": 65.0,
+        "Pareja": 65.0,
         "Familia": 65.0,
-        "Trabajo": 60.7,
+        "Trabajo": 60.6,
         "Amistad": 72.5
       }
     }
